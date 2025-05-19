@@ -5,7 +5,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: "0 1 * * *" # 每天凌晨1点运行
+    - cron: "0 20 * * 3" # 每天周三凌晨4点运行
   workflow_dispatch:
     inputs:
       force_update:
@@ -26,7 +26,6 @@ jobs:
       - name: 设置环境
         run: |
           echo "REPO_URL=https://api.github.com/repos/bia-pain-bache/BPB-Worker-Panel/releases" >> $GITHUB_ENV
-          echo "TARGET_FILE=worker.zip" >> $GITHUB_ENV
 
       - name: 检查并更新 Worker
         env:
@@ -50,12 +49,6 @@ jobs:
           fi
 
           TAG_NAME=$(echo "$RESPONSE" | jq -r '.[0].tag_name')
-          DOWNLOAD_URL=$(echo "$RESPONSE" | jq -r '.[0].assets[] | select(.name == "'"$TARGET_FILE"'") | .browser_download_url')
-
-          if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" == "null" ]; then
-            log "ERROR: 未找到 $TARGET_FILE"
-            exit 1
-          fi
           log "最新版本: $TAG_NAME"
 
           # 判断是否需要更新
@@ -65,12 +58,27 @@ jobs:
             exit 0
           fi
 
-          # 下载并更新
-          log "下载 $TARGET_FILE..."
-          wget -q -O "$TARGET_FILE" "$DOWNLOAD_URL"
-          log "解压 $TARGET_FILE..."
-          unzip -o "$TARGET_FILE"
-          rm "$TARGET_FILE"
+          # 克隆分支代码
+          git clone -b $TAG_NAME https://github.com/bia-pain-bache/BPB-Worker-Panel.git
+          cd BPB-Worker-Panel
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: clean code
+        shell: bash
+        run: |
+          cp  file: dist/*  ../
+          cd ..
+          rm -r BPB-Worker-Panel
           echo "$TAG_NAME" > version.txt
           log "更新完成，新版本: $TAG_NAME"
 
