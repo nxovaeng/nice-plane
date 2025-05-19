@@ -69,15 +69,20 @@ jobs:
           node-version: "latest"
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd BPB-Worker-Panel
+          npm install
 
       - name: Build project
-        run: npm run build
+        run: |
+          cd BPB-Worker-Panel
+          npm run build
 
       - name: clean code
         shell: bash
         run: |
-          cp  file: dist/*  ../
+          cd BPB-Worker-Panel
+          cp  dist/*  ../
           cd ..
           rm -r BPB-Worker-Panel
           echo "$TAG_NAME" > version.txt
