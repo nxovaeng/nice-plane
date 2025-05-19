@@ -87,7 +87,7 @@ jobs:
           cd ..
           rm -r BPB-Worker-Panel
           echo "$VERSION" > version.txt
-          log() { "更新完成，新版本: $VERSION" }
+          log() { echo "更新完成，新版本: $VERSION"; }
 
       - name: 提交更改
         if: success() # 仅在更新成功时提交
