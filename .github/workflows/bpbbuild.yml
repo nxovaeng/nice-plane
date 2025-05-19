@@ -55,12 +55,13 @@ jobs:
           FORCE_UPDATE=${{ github.event.inputs.force_update || 'false' }}
           if [ "$LOCAL_VERSION" = "$TAG_NAME" ] && [ "$FORCE_UPDATE" != "true" ]; then
             log "已是最新版本，无需更新"
-            exit 0
+            exit 1
           fi
 
           # 克隆分支代码
-          git clone -b $TAG_NAME https://github.com/bia-pain-bache/BPB-Worker-Panel.git
+          git clone --single-branch --branch $TAG_NAME https://github.com/bia-pain-bache/BPB-Worker-Panel.git
           cd BPB-Worker-Panel
+          git checkout $TAG_NAME
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
