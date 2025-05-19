@@ -78,9 +78,8 @@ jobs:
           npm run build
 
       - name: clean code
-      - env:
+        env:
           VERSION: ${{steps.checkver.outputs.VER}}
-        shell: bash
         run: |
           cd BPB-Worker-Panel
           cp  dist/*  ../
