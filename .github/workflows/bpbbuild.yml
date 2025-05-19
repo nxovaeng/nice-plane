@@ -23,10 +23,6 @@ jobs:
       - name: 检出仓库
         uses: actions/checkout@v4
 
-      - name: 设置环境
-        run: |
-          echo "REPO_URL=https://api.github.com/repos/bia-pain-bache/BPB-Worker-Panel/releases" >> $GITHUB_ENV
-
       - name: 检查并更新 Worker
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 使用 GitHub Token 认证
@@ -42,6 +38,7 @@ jobs:
 
           # 获取最新 Release
           log "获取最新 Release 信息..."
+          REPO_URL=https://api.github.com/repos/bia-pain-bache/BPB-Worker-Panel/releases
           RESPONSE=$(curl -s --retry 3 -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" "$REPO_URL")
           if [ $? -ne 0 ]; then
             log "ERROR: 无法访问 GitHub API"
@@ -86,7 +83,7 @@ jobs:
           cd ..
           rm -r BPB-Worker-Panel
           echo "$TAG_NAME" > version.txt
-          log "更新完成，新版本: $TAG_NAME"
+          log() { "更新完成，新版本: $TAG_NAME" }
 
       - name: 提交更改
         if: success() # 仅在更新成功时提交
