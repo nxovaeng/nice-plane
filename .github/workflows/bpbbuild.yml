@@ -82,7 +82,7 @@ jobs:
           VERSION: ${{steps.checkver.outputs.VER}}
         run: |
           cd BPB-Worker-Panel
-          cp  dist/*  ../
+          cp  dist/worker.js  ../_worker.js
           cd ..
           rm -r BPB-Worker-Panel
           echo "$VERSION" > version.txt
