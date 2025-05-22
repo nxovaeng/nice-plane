@@ -1,9 +1,9 @@
 name: Auto Update Worker
 
 on:
-  push:
-    branches:
-      - main
+  #push:
+  #  branches:
+  #    - main
   schedule:
     - cron: "0 20 * * 3" # 每天周三凌晨4点运行
   workflow_dispatch:
@@ -53,7 +53,7 @@ jobs:
           FORCE_UPDATE=${{ github.event.inputs.force_update || 'false' }}
           if [ "$LOCAL_VERSION" = "$TAG_NAME" ] && [ "$FORCE_UPDATE" != "true" ]; then
             log "已是最新版本，无需更新"
-            exit 1
+            exit 0
           fi
 
           # 克隆分支代码
