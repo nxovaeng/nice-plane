@@ -64,9 +64,9 @@ jobs:
     needs: check
     if: needs.check.outputs.status == 'success'
     steps:
-      - env:
-          VERSION: ${{needs.check.outputs.VER}}
       - name: clone code
+        env:
+          VERSION: ${{needs.check.outputs.VER}}
         run: |
           # 克隆分支代码
           git clone --single-branch --branch $VERSION https://github.com/bia-pain-bache/BPB-Worker-Panel.git
@@ -90,6 +90,8 @@ jobs:
           npm run build
 
       - name: clean code
+        env:
+          VERSION: ${{needs.check.outputs.VER}}
         run: |
           cd BPB-Worker-Panel
           cp  dist/worker.js  ../_worker.js
@@ -99,6 +101,8 @@ jobs:
           log() { echo "更新完成，新版本: $VERSION"; }
 
       - name: 提交更改
+        env:
+          VERSION: ${{needs.check.outputs.VER}}
         if: success() # 仅在更新成功时提交
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
