@@ -69,7 +69,7 @@ jobs:
     steps:
       - name: clone code
         env:
-          VERSION: ${{needs.check.outputs.VER}}
+          VERSION: ${{needs.check.outputs.VERSION}}
         run: |
           # 克隆分支代码
           git clone --single-branch --branch $VERSION https://github.com/bia-pain-bache/BPB-Worker-Panel.git
@@ -93,7 +93,7 @@ jobs:
 
       - name: clean code
         env:
-          VERSION: ${{needs.check.outputs.VER}}
+          VERSION: ${{needs.check.outputs.VERSION}}
         run: |
           cd BPB-Worker-Panel
           cp  dist/worker.js  ../_worker.js
@@ -106,5 +106,5 @@ jobs:
         if: success() # 仅在更新成功时提交
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🔄 自动同步 Worker 版本: ${{ needs.check.outputs.VER || '未知' }}"
+          commit_message: "🔄 自动同步 Worker 版本: ${{ needs.check.outputs.VERSION || '未知' }}"
           commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
