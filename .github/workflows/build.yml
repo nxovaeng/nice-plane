@@ -67,6 +67,9 @@ jobs:
     needs: check
     if: needs.check.outputs.update == 'true'
     steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+        
       - name: clone code
         env:
           VERSION: ${{needs.check.outputs.VERSION}}
@@ -96,7 +99,7 @@ jobs:
           VERSION: ${{needs.check.outputs.VERSION}}
         run: |
           cd BPB-Worker-Panel
-          cp  dist/worker.js  ../_worker.js
+          cp -f dist/worker.js  ../_worker.js
           cd ..
           rm -r BPB-Worker-Panel
           echo "$VERSION" > version.txt
